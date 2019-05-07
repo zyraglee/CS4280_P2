@@ -144,7 +144,7 @@ void driver(char *input, int line ){
 //note to self: rearrange later
 int isCharacter(char c) {
 
-	if(isalpha(c)){
+	 if( isalpha(c)) {
                 return 0;
         }
 

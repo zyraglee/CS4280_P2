@@ -47,8 +47,10 @@ struct node* vars() {
 			t->tk[0].lineNum = tokens[i].lineNum;
 			t->counts++;
 			i++;
-				
-			//if(strcmp(tokens[i].instance, ":") == 0){
+			
+	//		if(tokens[i].tokenType == NUMBER) {
+	
+			//if(strcmp(tokens[i].instance, " ") == 0){
 			//	i++;
 				
 				if(tokens[i].tokenType == NUMBER) {			
@@ -62,15 +64,15 @@ struct node* vars() {
 				} else {
 					errorParser();
 				}
-		//	} else {
-		//	
-		//		errorParser();
-		//	}
-
 		} else {
 			
-			errorParser();
-		}
+				errorParser();
+			}
+
+		//} else {
+			
+		//	errorParser();
+		//}
 			return t;
 	//if Empty
 	} else {
@@ -110,11 +112,11 @@ struct node* stats(){
 	stats->left = stat();
 //	if(strcmp(tokens[i].instance,":") == 0){
   //           i++;
-//		stats->eq = mStat();
-  //           return stats;
+		stats->eq = mStat();
+             return stats;
 //	} 
 
-        stats->eq = mStat();
+  //      stats->eq = mStat();
 	return stats;
 }
 
@@ -156,41 +158,58 @@ struct node* stat() {
 //still need to add :
 struct node* mStat(){
 	struct node* mStat1 = newNode("MSTAT");
-	if(strcmp(tokens[i].instance,"IFF") == 0 || strcmp(tokens[i].instance,"Loop") == 0 || strcmp(tokens[i].instance, "Read") ==0 || strcmp(tokens[i].instance, "Begin")==0 || strcmp(tokens[i].instance, "Out")== 0 || tokens[i].tokenType == IDENTIFIER){
+	if(strcmp(tokens[i].instance,"IFF") == 0 || strcmp(tokens[i].instance,"Loop") == 0 || strcmp(tokens[i].instance, "Read") ==0 || strcmp(tokens[i].instance, "Begin")==0 || strcmp(tokens[i].instance, "Output")== 0 || tokens[i].tokenType == IDENTIFIER)
+	{		
 		mStat1->left = stat();
-		mStat1->eq = mStat();
-		return mStat1;		
-	}else {
-		return mStat1;
-	}
+		//if(strcmp(tokens[i].instance, ":") == 0)
+		 	mStat1->eq = mStat();
+                return mStat1;
+		
+        } else {
+                return mStat1;
+}
+	
+	
 
 }
 
 // scan  Identifier  . 
 struct node* in(){
-		struct node* in = newNode("IN");
+	struct node* in = newNode("IN");
 	if(strcmp(tokens[i].instance,"Read") == 0){
 		i++;
+	   if(strcmp(tokens[i].instance,"[") == 0){
+                        i++;
 		if(tokens[i].tokenType == IDENTIFIER){
 			strcpy(in->tk[0].instance, tokens[i].instance);
 			in->tk[0].tokenType = tokens[i].tokenType;
 			in->tk[0].lineNum = tokens[i].lineNum;
 			in->counts++;
 			i++;
-			if(strcmp(tokens[i].instance, ".")==0){
+	            if(strcmp(tokens[i].instance,"]") == 0){
+                                i++;
+
+			if(strcmp(tokens[i].instance, ":")==0){
 				i++;
 				return in;
-			} else {
-		
-				errorParser();
-			}
+			     } else {
+                                        errorParser();
+                                }
 
-		} else {	
-			errorParser();
-		}
-	} else {
-		errorParser();
-	}
+                        } else {
+                                errorParser();
+                        }
+
+                } else {
+                        errorParser();
+                }
+
+        } else {
+                errorParser();
+        }} else {
+                errorParser();
+        }
+
 	return in;
 }
 
@@ -231,12 +250,12 @@ struct node* if1(){
 	struct node* if2 = newNode("IF");
 	if(strcmp(tokens[i].instance, "IFF")==0){
 		i++;
-		if(strcmp(tokens[i].instance, "(")==0){
+		if(strcmp(tokens[i].instance, "[")==0){
 			i++;
 			if2->left = expr();
 			if2->eq = ro();
 			if2->eq2 = expr();
-			if(strcmp(tokens[i].instance, ")")==0){
+			if(strcmp(tokens[i].instance, "]")==0){
 				i++;
 				if2->right = stat();		
 				return if2;
@@ -255,17 +274,17 @@ struct node* if1(){
 	return if2;
 }
 
-// >|>=|<|<=|=|==
+// >|=>|<|=<|=|==
 struct node* ro(){
 	struct node* ro1 = newNode("RO");
 	
-	if(strcmp(tokens[i].instance, "<" ) == 0){
+	if(strcmp(tokens[i].instance, "=" ) == 0){
 		strcpy(ro1->tk[0].instance,tokens[i].instance);	
 		ro1->tk[0].tokenType = tokens[i].tokenType;
         	ro1->tk[0].lineNum = tokens[i].lineNum;
 		ro1->counts++;
 		i++;
-		if(strcmp(tokens[i].instance, "=") == 0){
+		if(strcmp(tokens[i].instance, "<") == 0){
 			strcpy(ro1->tk[1].instance,tokens[i].instance);	
 			ro1->tk[1].tokenType = tokens[i].tokenType;
             		ro1->tk[1].lineNum = tokens[i].lineNum;
@@ -276,13 +295,13 @@ struct node* ro(){
 			return ro1;
 		}
 
-	} else if(strcmp(tokens[i].instance, ">" ) == 0){
+	} else if(strcmp(tokens[i].instance, "=" ) == 0){
 		strcpy(ro1->tk[0].instance,tokens[i].instance);	
 		ro1->tk[0].tokenType = tokens[i].tokenType;
         	ro1->tk[0].lineNum = tokens[i].lineNum;
         	ro1->counts++;
 		i++;
-		if(strcmp(tokens[i].instance, "=") == 0){
+		if(strcmp(tokens[i].instance, ">") == 0){
 			strcpy(ro1->tk[1].instance,tokens[i].instance);	
 			ro1->tk[1].tokenType = tokens[i].tokenType;
             		ro1->tk[1].lineNum = tokens[i].lineNum;
@@ -311,7 +330,14 @@ struct node* ro(){
 			return ro1;
 		}
 		return ro1;
-	} else {
+	}else if(strcmp(tokens[i].instance, "<" ) == 0){
+                strcpy(ro1->tk[0].instance,tokens[i].instance);
+                ro1->tk[0].tokenType = tokens[i].tokenType;
+                ro1->tk[0].lineNum = tokens[i].lineNum;
+                ro1->counts++;
+                i++;
+		return ro1;
+	 }else {
 		errorParser();
 	}
 	return ro1;
@@ -365,7 +391,7 @@ struct node* assign(){
                 		assign->counts++;
 				i++;
 				assign->left = expr();
-				if(strcmp(tokens[i].instance, ".")== 0){
+				if(strcmp(tokens[i].instance, ":")== 0){
 					i++;
 					return assign;
 				} else {

@@ -1,0 +1,9 @@
+INT Xl 1 \ see possible tree
+INT XE 2
+Begin
+  INT XE 3
+  INT XV 4 
+  Read [ Xl ] :  
+  Xl = 1 + 2 :
+  Output [ 1 ] : 
+End
