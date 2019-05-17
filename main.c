@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 		tokens = (Token *) malloc(sizeof(Token));	
 		//check if the file is NULL
 		if (file == NULL) {	
-			perror("Error opening file");
+			perror("Error opening file"); 
 			return 0;		
 		} else {
 
