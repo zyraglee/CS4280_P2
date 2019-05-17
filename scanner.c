@@ -7,23 +7,18 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-
+#include <stdbool.h>
 
 //Driver that loops throught the table, while doing it we store the token in the struct. token, lin number, and tokentype
-void driver(char *input, int line ){
+void driver(char *input, int line) {
 		int i;
 		int nextChar = 0;
 		int state = 0;	
 		int j = 0;
-
 		ignoreComments(input);
-
-		for(i = 0; i < strlen(input); i++)
-		{
-			
+		for(i = 0; i < strlen(input); i++) {
 				//driver that loops through the table
-				nextChar = isCharacter(input[i]);	
-				
+				nextChar = isCharacter(input[i], input, i);	
 				if(nextChar == -1){	
 					sprintf(errorBuffer, "Scanner Error in Line %d:  %c Invalid Character", line, input[i]);
 					strcpy(error[errorIndex], errorBuffer);
@@ -120,7 +115,10 @@ void driver(char *input, int line ){
 					if(state == 1021){	
 						tokens[z].tokenType = RIGHT_BRACKETS;
 					}
-					if(state >= 1001 && state <= 1021){
+					if(state == 1022) {
+						tokens[z].tokenType = NOT_EQUAL;
+					}
+					if(state >= 1001 && state <= 1022){
 						state = 0;
 						tokens[z].lineNum = line;
 						checkError();	
@@ -135,14 +133,16 @@ void driver(char *input, int line ){
 						j++;
 					}
 				}
+			
 			}
+			
 
 }
 
 
 //Check the character. Once Identified,  return the respective value to the nextChar index
 //note to self: rearrange later
-int isCharacter(char c) {
+int isCharacter(char c, char *input, int i) {
 
 	 if( isalpha(c)) {
                 return 0;
@@ -153,7 +153,7 @@ int isCharacter(char c) {
         }
 
         if(c == '='){
-                return 2;
+		return 2;
         }
 
         if(c == '<'){
@@ -237,22 +237,22 @@ int isCharacter(char c) {
 
 //functions that removes a single line comment
 void ignoreComments(char *input){
-	int i;
+	int x;
 	size_t len = strlen(input);
 
 	//if a '\' is detected
-	for(i = 0; i < len; i++){
-		if (input[i] == '\\') {
-			int j;			
-			input[i] = ' ';
+	for(x = 0; x < len; x++){
+		if (input[x] == '\\') {
+			int m;			
+			input[x] = ' ';
 			//traverse through the input		
-			for(j=i+1; j < len; j++ ){
+			for(m=x+1; m < len; m++ ){
 				//if end of line has not been reached, continue to replace char with spaces
-				if(input[j] == '\\' && input[j] != '\n'){	
-					input[j] = ' ';
-					j = len+1;
+				if(input[m] == '\\' && input[m] != '\n'){	
+					input[m] = ' ';
+					m = len+1;
 				} else {//replace the entire line
-					input[j] = ' ';
+					input[m] = ' ';
 				}
 						
 			}
@@ -381,11 +381,12 @@ void createFSATable() {
     table[0][20] = 18;
     table[0][21] = 19;
     table[0][22] = 20;
+    table[0][23] = 21;
     
     
     //identifier states
     table[1][0] = 1;
-    table[1][1] = 1001;
+    table[1][1] = 1;
     table[1][2] = 1001;
     table[1][3] = 1001;
     table[1][4] = 1001;
@@ -407,6 +408,7 @@ void createFSATable() {
     table[1][20] = 1001;
     table[1][21] = 1001;
     table[1][22] = 1001;
+    table[1][23] = 1001;
     
     //integer states
     table[2][0] = 1002;
@@ -432,6 +434,7 @@ void createFSATable() {
     table[2][20] = 1002;
     table[2][21] = 1002;
     table[2][22] = 1002;
+    table[2][23] = 1002;
     
     //equal states
     table[3][0] = 1003;
@@ -457,6 +460,7 @@ void createFSATable() {
     table[3][20] = 1003;
     table[3][21] = 1003;
     table[3][22] = 1003;
+    table[3][23] = 1003;
     
     
     //less than states
@@ -483,6 +487,7 @@ void createFSATable() {
     table[4][20] = 1004;
     table[4][21] = 1004;
     table[4][22] = 1004;
+    table[4][23] = 1004;
     
     //greater than states
     table[5][0] = 1006;
@@ -508,6 +513,7 @@ void createFSATable() {
     table[5][20] = 1006;
     table[5][21] = 1006;
     table[5][22] = 1006;
+    table[5][23] = 1006;
     
     //Colon states
     table[6][0] = 1007;
@@ -533,6 +539,7 @@ void createFSATable() {
     table[6][20] = 1007;
     table[6][21] = 1007;
     table[6][22] = 1007;
+    table[6][23] = 1007;
     
     
     //Plus states
@@ -559,6 +566,7 @@ void createFSATable() {
     table[7][20] = 1008;
     table[7][21] = 1008;
     table[7][22] = 1008;
+    table[7][23] = 1008;
     
     //minus states
     table[8][0] = 1009;
@@ -584,6 +592,7 @@ void createFSATable() {
     table[8][20] = 1009;
     table[8][21] = 1009;
     table[8][22] = 1009;
+    table[8][23] = 1009;
     
     //Star states
     table[9][0] = 1010;
@@ -609,6 +618,7 @@ void createFSATable() {
     table[9][20] = 1010;
     table[9][21] = 1010;
     table[9][22] = 1010;
+    table[9][23] = 1010;
     
     //Slash states
     table[10][0] = 1011;
@@ -634,6 +644,7 @@ void createFSATable() {
     table[10][20] = 1011;
     table[10][21] = 1011;
     table[10][22] = 1011;
+    table[10][23] = 1011;
     
     
     //Percent states
@@ -660,6 +671,7 @@ void createFSATable() {
     table[11][20] = 1012;
     table[11][21] = 1012;
     table[11][22] = 1012;
+    table[11][23] = 1012;
     
     //Dot states
     table[12][0] = 1013;
@@ -685,6 +697,7 @@ void createFSATable() {
     table[12][20] = 1013;
     table[12][21] = 1013;
     table[12][22] = 1013;
+    table[12][23] = 1013;
     
     //Left parenthesis states
     table[13][0] = 1014;
@@ -710,6 +723,7 @@ void createFSATable() {
     table[13][20] = 1014;
     table[13][21] = 1014;
     table[13][22] = 1014;
+    table[13][23] = 1014;
     
     //Right parenthesis states
     table[14][0] = 1015;
@@ -735,6 +749,7 @@ void createFSATable() {
     table[14][20] = 1015;
     table[14][21] = 1015;
     table[14][22] = 1015;
+    table[14][23] = 1015;
     
     //Comma states
     table[15][0] = 1016;
@@ -760,6 +775,7 @@ void createFSATable() {
     table[15][20] = 1016;
     table[15][21] = 1016;
     table[15][22] = 1016;
+    table[15][23] = 1017;
     
     
     //left braces states
@@ -786,6 +802,7 @@ void createFSATable() {
     table[16][20] = 1017;
     table[16][21] = 1017;
     table[16][22] = 1017;
+    table[16][23] = 1017;
     
     
     //right brace states
@@ -812,6 +829,7 @@ void createFSATable() {
     table[17][20] = 1018;
     table[17][21] = 1018;
     table[17][22] = 1018;
+    table[17][23] = 1018;
     
     
     
@@ -839,6 +857,7 @@ void createFSATable() {
     table[18][20] = 1019;
     table[18][21] = 1019;
     table[18][22] = 1019;
+    table[18][23] = 1019;
     
     //left bracket states
     table[19][0] = 1020;
@@ -864,6 +883,7 @@ void createFSATable() {
     table[19][20] = 1020;
     table[19][21] = 1020;
     table[19][22] = 1020;
+    table[19][23] = 1020;
     
     
     //right brackets states
@@ -890,5 +910,31 @@ void createFSATable() {
     table[20][20] = 1021;
     table[20][21] = 1021;
     table[20][22] = 1021;
-    
-}
+    table[20][23] = 1021;
+
+    //not equal states
+    table[21][0] = 1022;
+    table[21][1] = 1022;
+    table[21][2] = 1022;
+    table[21][3] = 1022;
+    table[21][4] = 1022;
+    table[21][5] = 1022;
+    table[21][6] = 1022;
+    table[21][7] = 1022;
+    table[21][8] = 1022;
+    table[21][9] = 1022;
+    table[21][10] = 1022;
+    table[21][11] = 1022;
+    table[21][12] = 1022;
+    table[21][13] = 1022;
+    table[21][14] = 1022;
+    table[21][15] = 1022;
+    table[21][16] = 1022;
+    table[21][17] = 1022;
+    table[21][18] = 1022;
+    table[21][19] = 1022;
+    table[21][20] = 1022;
+    table[21][21] = 1022;
+    table[21][22] = 1022;
+    table[21][23] = 1022;
+} 

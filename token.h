@@ -24,7 +24,7 @@ typedef enum {
 	SEMICOLON,
 	LEFT_BRACKETS,
 	RIGHT_BRACKETS,
-	
+        NOT_EQUAL,	
 	//keywords
 	BEGIN_KEYWORD,
 	END_KEYWORD,

@@ -1,10 +1,6 @@
 \comment
-INT X 1
+INT X0 1
+INT X1 2
 Begin
-  Read [ X ] : 
-    Loop [ X > 0 ]
-      Begin
-          Output [ X ] :
-	       X = X * 2 :
-	        End
-		End
+  Output [ 1 ] :
+End

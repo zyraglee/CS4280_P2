@@ -1,5 +1,9 @@
-INT X 1
-INT Xl 2
+INT Xl 1 \ see possible tree
+INT X3 2
 Begin
-  Output [ 1 ] :
+  INT X3 3
+  INT X5 4 
+  Read [ X1 ] :  
+  X1 = 1 + 2 :
+  Output [ 1 ] : 
 End

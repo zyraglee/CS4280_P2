@@ -20,7 +20,7 @@ void createFSATable();
 void driver(char *input, int line);
 
 int isExAcceptibleChar(char c);
-int isCharacter(char c);
+int isCharacter(char c, char *input, int line);
 
 void checkError();
 void checkIfKeyword();

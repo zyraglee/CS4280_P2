@@ -1,4 +1,15 @@
+INT X1 1 
+INT X2 2
 Begin
-  Loop [ 1 = < 2 ]
-    Output [ 2 ] : 
+  INT X3 3
+  INT X4 4 
+  Read [ X1 ] :  
+  IFF [ X1 + 2 = = 3 ] 
+  Begin
+    INT X5 5
+    Loop [ 1 < 2 ] 
+      Output [ 1 + 2 ] :
+  End :
+  X1 = 1 + 2 :
+  Output [ 1 ] : 
 End

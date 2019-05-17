@@ -90,8 +90,15 @@ struct node* block() {
 		i++;
 		block->left = vars();
 		block->eq = stats();
-		if(strcmp(tokens[i].instance, "End") == 0){	
+		if(strcmp(tokens[i].instance, ":") == 0) {
 			i++;
+		}
+		if(strcmp(tokens[i].instance, "End") == 0) {
+			i++;
+			if(strcmp(tokens[i].instance, ":") == 0) {
+				i++;
+				return block;
+			}
 			return block;	
 		} else {	
 			
@@ -107,16 +114,16 @@ struct node* block() {
 
 //<stats> -> <stat>: <mStat>
 //still need to add :
-struct node* stats(){
+struct node* stats() {
 	struct node* stats = newNode("STATS");
 	stats->left = stat();
-//	if(strcmp(tokens[i].instance,":") == 0){
-  //           i++;
+/*	if(strcmp(tokens[i].instance,":") == 0){
+           i++;
 		stats->eq = mStat();
              return stats;
-//	} 
+	} */
 
-  //      stats->eq = mStat();
+      stats->eq = mStat();
 	return stats;
 }
 
@@ -278,7 +285,7 @@ struct node* if1(){
 struct node* ro(){
 	struct node* ro1 = newNode("RO");
 	
-	if(strcmp(tokens[i].instance, "=" ) == 0){
+	if(strcmp(tokens[i].instance, "=") == 0){
 		strcpy(ro1->tk[0].instance,tokens[i].instance);	
 		ro1->tk[0].tokenType = tokens[i].tokenType;
         	ro1->tk[0].lineNum = tokens[i].lineNum;
@@ -291,53 +298,44 @@ struct node* ro(){
 			ro1->counts++;
 			i++;
 			return ro1;
-		} else {
-			return ro1;
 		}
-
-	} else if(strcmp(tokens[i].instance, "=" ) == 0){
-		strcpy(ro1->tk[0].instance,tokens[i].instance);	
-		ro1->tk[0].tokenType = tokens[i].tokenType;
-        	ro1->tk[0].lineNum = tokens[i].lineNum;
-        	ro1->counts++;
-		i++;
-		if(strcmp(tokens[i].instance, ">") == 0){
+		else if(strcmp(tokens[i].instance, ">") == 0){
 			strcpy(ro1->tk[1].instance,tokens[i].instance);	
 			ro1->tk[1].tokenType = tokens[i].tokenType;
             		ro1->tk[1].lineNum = tokens[i].lineNum;
-            		ro1->counts++;
+			ro1->counts++;
 			i++;
 			return ro1;
-		} else {
-			return ro1;
 		}
-		return ro1;
-	
-	} else if(strcmp(tokens[i].instance, "=" ) == 0){
-		strcpy(ro1->tk[0].instance,tokens[i].instance);
-		ro1->tk[0].tokenType = tokens[i].tokenType;
- 	       	ro1->tk[0].lineNum = tokens[i].lineNum;
-        	ro1->counts++;
-		i++;
-		if(strcmp(tokens[i].instance, "=") == 0){
+		else if(strcmp(tokens[i].instance, "=") == 0){
 			strcpy(ro1->tk[1].instance,tokens[i].instance);	
 			ro1->tk[1].tokenType = tokens[i].tokenType;
            		ro1->tk[1].lineNum = tokens[i].lineNum;
 			ro1->counts++;
 			i++;
 			return ro1;
-		} else {
+		}
+		else {
 			return ro1;
 		}
-		return ro1;
-	}else if(strcmp(tokens[i].instance, "<" ) == 0){
+	}
+	else if(strcmp(tokens[i].instance, "<" ) == 0){
                 strcpy(ro1->tk[0].instance,tokens[i].instance);
                 ro1->tk[0].tokenType = tokens[i].tokenType;
                 ro1->tk[0].lineNum = tokens[i].lineNum;
                 ro1->counts++;
                 i++;
 		return ro1;
-	 }else {
+	}
+	else if(strcmp(tokens[i].instance, ">" ) == 0){
+                strcpy(ro1->tk[0].instance,tokens[i].instance);
+                ro1->tk[0].tokenType = tokens[i].tokenType;
+                ro1->tk[0].lineNum = tokens[i].lineNum;
+                ro1->counts++;
+                i++;
+		return ro1;
+	}
+	else {
 		errorParser();
 	}
 	return ro1;

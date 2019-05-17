@@ -5,10 +5,8 @@ Notes:
 	- tree and parser are merged in one file
 	- Professor Janikow printed nodes on the tree even though its empty, so mines does something similar
 	- if theres an error, my program just terminates
-	- there test1-6.input1 are good programs, bad1-4.input1 are bad program
-	- minor changes  were made to the BNF.
-		- the ':' between <mStat> and <stat> are missing
-			- I keep getting error from loop() in parser
+UPDATE:	- Everything works note
+		- i had an issue with my RO() and was exiting too early. I didnt take into account that its going back into block from <stat> so I wasn't handling the ':' properly
 
 BNF
 <program>  ->     <vars> <block>
@@ -19,8 +17,8 @@ BNF
 <N>        ->     <M> / <N> | <M>
 <M>        ->   - <M> |  <R>
 <R>        ->   [ <expr> ] | Identifier | Integer
-<stats>    ->     <stat>  <mStat>
-<mStat>    ->      empty |  <stat> <mStat>
+<stats>    ->     <stat>: <mStat>
+<mStat>    ->      empty |  <stat> :  <mStat>
 <stat>     ->     <in> | <out> | <block> | <if> | <loop> | <assign>
 <in>       ->      Read [ Identifier ]  
 <out>      ->      Output [ <expr> ]
